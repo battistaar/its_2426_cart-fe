@@ -12,13 +12,18 @@ import { CartSourceService } from './services/cart-source.service';
 export class AppComponent {
   protected cartSrv = inject(CartSourceService);
 
-  items = this.cartSrv.getCart();
+  items$ = this.cartSrv.items$;
 
   vat = getVat('IT');
 
+  ngOnInit() {
+    this.items$.subscribe(val => {
+      console.log(val);
+    })
+  }
+
   updateQuantity(item: any, newQuantity: number) {
     this.cartSrv.setQuantity(item.id, newQuantity);
-    this.items = this.cartSrv.getCart();
   }
 
   trackById(_: number, item: any) {

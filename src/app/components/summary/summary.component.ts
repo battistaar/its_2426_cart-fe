@@ -10,7 +10,7 @@ import { calcCartItem, getTransportFee } from '../../utils/cart-utils';
 })
 export class SummaryComponent implements OnChanges {
   @Input({ required: true })
-  items: any[] = [];
+  items: any[] | null = [];
 
   @Input()
   vat: number = 0;
@@ -30,6 +30,10 @@ export class SummaryComponent implements OnChanges {
     };
 
     let weight = 0;
+
+    if (!this.items) {
+      return summary;
+    }
 
     for(const item of this.items) {
       const cItem = calcCartItem(item, this.vat);

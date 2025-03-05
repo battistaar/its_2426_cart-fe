@@ -18,7 +18,6 @@ export class CartItemComponent {
   onQuantityChange = new EventEmitter<number>();
 
   getItemPrice(item: any) {
-    console.log('cart-item-render');
     const calculated = calcCartItem(item, this.vat);
     return calculated.totalPrice;
   }

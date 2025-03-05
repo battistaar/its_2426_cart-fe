@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { cart } from '../utils/cart-data';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 
 @Injectable()
 export class CartSourceService {
-  protected items: any[] = [...cart];
+  protected _items$ = new BehaviorSubject<any[]>([...cart]);
 
-  getCart() {
-    return this.items;
-  }
+  items$ = this._items$.asObservable();
 
   setQuantity(id: string, quantity: number) {
-    const index = this.items.findIndex(i => i.id === id);
-    const clone = structuredClone(this.items);
+    const list = this._items$.value;
+
+    const index = list.findIndex(i => i.id === id);
+    const clone = structuredClone(list);
     clone[index].quantity = quantity;
 
-    this.items = clone;
+    this._items$.next(clone);
   }
 }
