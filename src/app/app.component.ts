@@ -1,9 +1,8 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { cart } from './utils/cart-data';
-import { getVat } from './utils/cart-utils';
 import { CartSourceService } from './services/cart-source.service';
 import { VatService } from './services/vat.service';
-import { Subject, Subscription, takeUntil, tap } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+import { CartItem } from './services/cart-item.entity';
 
 @Component({
   selector: 'app-root',
@@ -42,11 +41,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
-  updateQuantity(item: any, newQuantity: number) {
+  updateQuantity(item: CartItem, newQuantity: number) {
     this.cartSrv.setQuantity(item.id, newQuantity);
   }
 
-  trackById(_: number, item: any) {
+  trackById(_: number, item: CartItem) {
     return item.id;
   }
 }

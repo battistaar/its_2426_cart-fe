@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { calcCartItem } from '../../utils/cart-utils';
+import { CartItem } from '../../services/cart-item.entity';
 
 @Component({
   selector: 'app-cart-item',
@@ -9,7 +10,7 @@ import { calcCartItem } from '../../utils/cart-utils';
 })
 export class CartItemComponent {
   @Input({required: true})
-  item: any;
+  item!: CartItem;
 
   @Input()
   vat: number = 0;
@@ -17,12 +18,12 @@ export class CartItemComponent {
   @Output('quantityChange')
   onQuantityChange = new EventEmitter<number>();
 
-  getItemPrice(item: any) {
+  getItemPrice(item: CartItem) {
     const calculated = calcCartItem(item, this.vat);
     return calculated.totalPrice;
   }
 
-  getDiscountAmount(item: any) {
+  getDiscountAmount(item: CartItem) {
     const calculated = calcCartItem(item, this.vat);
     return calculated.discountAmount;
   }

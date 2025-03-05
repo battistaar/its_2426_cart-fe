@@ -1,3 +1,5 @@
+import { CartItem } from "../services/cart-item.entity";
+
 export function getDiscountedPrice(price: number, discount: number) {
   return price * (1-discount/100);
 }
@@ -20,8 +22,8 @@ export function getTransportFee(weight: number) {
   return transportFee;
 }
 
-export function calcCartItem(item: any, vat: number) {
-  const discountedPrice = getDiscountedPrice(item.netPrice, item.discount);
+export function calcCartItem(item: CartItem, vat: number) {
+  const discountedPrice = getDiscountedPrice(item.product.netPrice, item.product.discount);
   const price = getVatPrice(discountedPrice, vat);
   const total = price * item.quantity;
 
@@ -30,8 +32,8 @@ export function calcCartItem(item: any, vat: number) {
       discountedPrice: discountedPrice * item.quantity,
       vatAmount: (discountedPrice * item.quantity) * vat,
       totalPrice: total,
-      discountAmount: total * item.discount / 100,
-      totalWeight: item.weight * item.quantity
+      discountAmount: total * item.product.discount / 100,
+      totalWeight: item.product.weight * item.quantity
   };
 }
 
