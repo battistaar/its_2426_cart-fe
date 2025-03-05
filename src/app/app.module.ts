@@ -17,8 +17,8 @@ registerLocaleData(localeIt);
   declarations: [
     AppComponent,
     CartItemComponent,
-    SummaryComponent,
-    DiscountAmountPipe
+    DiscountAmountPipe,
+    SummaryComponent
   ],
   imports: [
     BrowserModule,

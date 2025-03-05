@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { calcCartItem, getTransportFee } from '../../utils/cart-utils';
 
 @Component({
@@ -9,74 +9,55 @@ import { calcCartItem, getTransportFee } from '../../utils/cart-utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SummaryComponent implements OnChanges {
-  @Input()
+  @Input({ required: true })
   items: any[] = [];
 
   @Input()
   vat: number = 0;
 
-  summary = this.getSummary();
+  summary = this.calcSummary();
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.summary = this.getSummary();
+    this.summary = this.calcSummary();
   }
 
-  getSummary() {
-    console.log('getSummary');
-    const summary = this.items.reduce((summ, item) => {
-      const calculated = calcCartItem(item, this.vat);
-      return {
-        netTotal: summ.netTotal + calculated.discountedPrice,
-        totalVat: summ.totalVat + calculated.vatAmount,
-        totalWeight: summ.totalWeight + calculated.totalWeight,
-        totalPrice: summ.totalPrice + calculated.totalPrice
-      }
-    }, {netTotal: 0, totalVat: 0, totalWeight: 0, totalPrice: 0});
+  protected calcSummary() {
+    const summary = {
+      netTotal: 0,
+      totalVat: 0,
+      totalPrice: 0,
+      transportFee: 0
+    };
 
-    const transportFee = getTransportFee(summary.totalWeight);
+    let weight = 0;
 
-    return {
-      ...summary,
-      transportFee
+    for(const item of this.items) {
+      const cItem = calcCartItem(item, this.vat);
+      summary.netTotal += cItem.discountedPrice;
+      summary.totalVat += cItem.vatAmount;
+      summary.totalPrice += cItem.totalPrice;
+      weight += cItem.totalWeight
     }
+
+    summary.transportFee = getTransportFee(weight);
+
+    return summary;
   }
+
+  // sumProperty(property: string): number {
+  //   let total = 0;
+  //   for (const item of this.items) {
+  //     const cItem = calcCartItem(item, this.vat);
+  //     total += cItem[property];
+  //   }
+  //   return total;
+  // }
+
+  // netTotal(): number {
+  //   return this.sumProperty('discountedPrice');
+  // }
+
+  // totalVat(): number {
+  //   return this.sumProperty('vatAmount');
+  // }
 }
-
-// @Component({
-//   selector: 'app-summary',
-//   standalone: false,
-//   templateUrl: './summary.component.html',
-//   styleUrl: './summary.component.css',
-//   changeDetection: ChangeDetectionStrategy.OnPush
-// })
-// export class SummaryComponent {
-//   items = input<any[]>([]);
-
-//   vat = input(0);
-
-//   summary = computed<any>(() => {
-//     return this.getSummary(this.items(), this.vat());
-//   })
-
-//   protected getSummary(items: any[], vat: number) {
-//     console.log('getSummary');
-//     const summary = items.reduce((summ, item) => {
-//       const calculated = calcCartItem(item, vat);
-//       return {
-//         netTotal: summ.netTotal + calculated.discountedPrice,
-//         totalVat: summ.totalVat + calculated.vatAmount,
-//         totalWeight: summ.totalWeight + calculated.totalWeight,
-//         totalPrice: summ.totalPrice + calculated.totalPrice
-//       }
-//     }, {netTotal: 0, totalVat: 0, totalWeight: 0, totalPrice: 0});
-
-//     const transportFee = getTransportFee(summary.totalWeight);
-
-//     return {
-//       ...summary,
-//       transportFee
-//     }
-//   }
-// }
-
-
