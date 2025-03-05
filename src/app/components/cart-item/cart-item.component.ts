@@ -1,11 +1,11 @@
-import { Component, DEFAULT_CURRENCY_CODE, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { calcCartItem } from '../../utils/cart-utils';
 
 @Component({
   selector: 'app-cart-item',
   standalone: false,
   templateUrl: './cart-item.component.html',
-  styleUrl: './cart-item.component.css'
+  styleUrl: './cart-item.component.css',
 })
 export class CartItemComponent {
   @Input({required: true})
@@ -18,6 +18,7 @@ export class CartItemComponent {
   onQuantityChange = new EventEmitter<number>();
 
   getItemPrice(item: any) {
+    console.log('cart-item-render');
     const calculated = calcCartItem(item, this.vat);
     return calculated.totalPrice;
   }
