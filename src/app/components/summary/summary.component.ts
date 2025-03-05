@@ -10,9 +10,9 @@ import { calcCartItem, getTransportFee } from '../../utils/cart-utils';
 })
 export class SummaryComponent implements OnChanges {
   @Input({ required: true })
-  items: any[] | null = [];
+  items: any[] = [];
 
-  @Input()
+  @Input({ transform: (val: number | null) => val ? val : 0})
   vat: number = 0;
 
   summary = this.calcSummary();
