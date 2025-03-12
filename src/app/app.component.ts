@@ -27,6 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
     // this.subscription = this.items$.subscribe(val => {
     //   console.log(val);
     // });
+
     this.items$
       .pipe(
         takeUntil(this.destroyed$)
