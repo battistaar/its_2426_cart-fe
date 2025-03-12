@@ -15,13 +15,16 @@ export class CartSourceService {
   }
 
   setQuantity(id: string, quantity: number) {
-    const list = this._items$.value;
+    this.http.patch<CartItem>(`/api/cart/${id}`, { quantity })
+      .subscribe(updated => {
+        const list = this._items$.value;
 
-    const index = list.findIndex(i => i.id === id);
-    const clone = structuredClone(list);
-    clone[index].quantity = quantity;
+        const index = list.findIndex(i => i.id === id);
+        const clone = structuredClone(list);
+        clone[index] = updated;
 
-    this._items$.next(clone);
+        this._items$.next(clone);
+      });
   }
 
   fetch() {

@@ -1,7 +1,7 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CartSourceService } from './services/cart-source.service';
 import { VatService } from './services/vat.service';
-import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, Subject, take, takeUntil } from 'rxjs';
 import { CartItem } from './services/cart-item.entity';
 
 @Component({
@@ -18,21 +18,20 @@ export class AppComponent implements OnInit, OnDestroy {
 
   vat$ = this.vatSrv.vat$;
 
+  protected updateQtySubject$ = new Subject<{id: string, quantity: number}>();
   protected destroyed$ = new Subject<void>();
   // protected subscription: Subscription | null = null;
 
   ngOnInit() {
     this.vatSrv.setCountry('IT');
 
-    // this.subscription = this.items$.subscribe(val => {
-    //   console.log(val);
-    // });
-
-    this.items$
+    this.updateQtySubject$
       .pipe(
-        takeUntil(this.destroyed$)
-      ).subscribe(val => {
-        console.log(val);
+        takeUntil(this.destroyed$),
+        debounceTime(300)
+      )
+      .subscribe(({id, quantity}) => {
+        this.cartSrv.setQuantity(id, quantity);
       });
   }
 
@@ -43,7 +42,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   updateQuantity(item: CartItem, newQuantity: number) {
-    this.cartSrv.setQuantity(item.id, newQuantity);
+    this.updateQtySubject$.next({id: item.id, quantity: newQuantity});
   }
 
   trackById(_: number, item: CartItem) {
