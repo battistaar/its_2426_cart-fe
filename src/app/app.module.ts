@@ -13,6 +13,9 @@ import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import { DiscountAmountPipe } from './pipes/discount-amount.pipe';
 import { CartSourceService } from './services/cart-source.service';
 import { provideHttpClient } from '@angular/common/http';
+import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { ProductsComponent } from './pages/products/products.component';
+import { ProductCardComponent } from './components/product-card/product-card.component';
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -20,7 +23,10 @@ registerLocaleData(localeIt);
     AppComponent,
     CartItemComponent,
     DiscountAmountPipe,
-    SummaryComponent
+    SummaryComponent,
+    CheckoutComponent,
+    ProductsComponent,
+    ProductCardComponent
   ],
   imports: [
     BrowserModule,
