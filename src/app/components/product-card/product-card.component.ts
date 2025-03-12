@@ -32,7 +32,7 @@ export class ProductCardComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     const p = getVatPrice(this.product.netPrice, this.vat);
-    this.price = getDiscountedPrice(p, this.vat);
+    this.price = getDiscountedPrice(p, this.product.discount);
     this.discount = p * this.product.discount;
   }
 
