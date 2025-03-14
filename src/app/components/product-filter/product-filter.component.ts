@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { assign, defaults } from 'lodash';
 import { filter, Subject, takeUntil } from 'rxjs';
 
 export type ProductFilterEvent = {
@@ -18,11 +19,18 @@ export type ProductFilterEvent = {
 export class ProductFilterComponent implements OnInit, OnDestroy {
   protected fb = inject(FormBuilder);
 
-  filters = this.fb.group({
+  filtersForm = this.fb.group({
     name: new FormControl<string | null>(''),
     minPrice: new FormControl<number | null>(null,{updateOn: 'submit', validators: [Validators.min(0)]}),
     maxPrice: new FormControl<number | null>(null, {updateOn: 'submit', validators: [Validators.min(0)]})
   });
+
+  @Input()
+  set filters(value: Partial<ProductFilterEvent>) {
+    const v = defaults({}, value, {name: null, minPrice: null, maxPrice: null});
+    this.filtersForm.patchValue(v, {emitEvent: false});
+    this.filtersForm.markAsPristine();
+  }
 
   @Output()
   filterChange = new EventEmitter<ProductFilterEvent>();
@@ -30,9 +38,9 @@ export class ProductFilterComponent implements OnInit, OnDestroy {
   protected destroyed$ = new Subject<void>();
 
   ngOnInit() {
-    this.filters.valueChanges
+    this.filtersForm.valueChanges
       .pipe(
-        filter(_ => this.filters.valid),
+        filter(_ => this.filtersForm.valid),
         takeUntil(this.destroyed$)
       )
       .subscribe(filterValue => {

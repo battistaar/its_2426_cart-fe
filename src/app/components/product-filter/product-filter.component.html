@@ -1,4 +1,4 @@
-<form [formGroup]="filters">
+<form [formGroup]="filtersForm">
   <div class="row align-items-end">
     <div class="col">
       <label class="form-label">Name:</label>
@@ -10,7 +10,7 @@
         formControlName="minPrice"
         type="number"
         class="form-control"
-        [class.is-invalid]="filters.get('minPrice')?.invalid"
+        [class.is-invalid]="filtersForm.get('minPrice')?.invalid"
       >
     </div>
     <div class="col">
@@ -19,7 +19,7 @@
         formControlName="maxPrice"
         type="number"
         class="form-control"
-        [class.is-invalid]="filters.get('maxPrice')?.invalid">
+        [class.is-invalid]="filtersForm.get('maxPrice')?.invalid">
     </div>
     <div class="col">
       <button type="submit" class="btn btn-primary">Search</button>
