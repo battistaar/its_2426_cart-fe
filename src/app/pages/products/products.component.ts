@@ -16,33 +16,23 @@ export class ProductsComponent implements OnInit, OnDestroy {
   protected activatedRoute = inject(ActivatedRoute);
   protected router = inject(Router);
 
-  filters$: Observable<ProductFilter> = this.activatedRoute.queryParams
-              .pipe(
-                map(params => {
-                  return pick(params, 'name', 'minPrice', 'maxPrice')
-                }),
-                map(params => {
-                  return {
-                    ...params,
-                    minPrice: params.minPrice ? parseFloat(params.minPrice) : null,
-                    maxPrice: params.maxPrice ? parseFloat(params.maxPrice) : null
-                  }
-                })
-              );
+  filters$: Observable<ProductFilter> = this.activatedRoute.data
+                                          .pipe(
+                                            map(data => data['filters'])
+                                          );
 
   products$ = this.filters$
-              .pipe(
-                debounceTime(300),
-                switchMap(filters => {
-                  return this.productSrv.list(filters)
-                    .pipe(
-                      catchError(err => {
-                        console.error(err);
-                        return [];
-                      })
-                    )
-                })
-              );
+                .pipe(
+                  switchMap(filters => {
+                    return this.productSrv.list(filters)
+                      .pipe(
+                        catchError(err => {
+                          console.error(err);
+                          return [];
+                        })
+                      )
+                  })
+                );
 
   protected updateQueryParams$ = new Subject<ProductFilter>();
 
