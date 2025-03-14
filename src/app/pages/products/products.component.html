@@ -1,22 +1,31 @@
 <div class="container-fluid mt-5">
   <div class="row">
     <div class="col">
-      <form>
+      <form [formGroup]="filters">
         <div class="row align-items-end">
           <div class="col">
             <label class="form-label">Name:</label>
-            <input type="text" class="form-control" placeholder="Product name">
+            <input formControlName="name" type="text" class="form-control" placeholder="Product name">
           </div>
           <div class="col">
             <label class="form-label">Min Price:</label>
-            <input type="number" class="form-control">
+            <input
+              formControlName="minPrice"
+              type="number"
+              class="form-control"
+              [class.is-invalid]="filters.get('minPrice')?.invalid"
+            >
           </div>
           <div class="col">
             <label class="form-label">Max Price:</label>
-            <input type="number" class="form-control">
+            <input
+              formControlName="maxPrice"
+              type="number"
+              class="form-control"
+              [class.is-invalid]="filters.get('maxPrice')?.invalid">
           </div>
           <div class="col">
-            <button class="btn btn-primary">Search</button>
+            <button type="submit" class="btn btn-primary">Search</button>
           </div>
         </div>
       </form>
