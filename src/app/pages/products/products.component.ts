@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { Product } from '../../services/product.entity';
-import { ProductService } from '../../services/product.service';
+import { ProductFilter, ProductService } from '../../services/product.service';
 import { FormBuilder, Validators } from '@angular/forms';
-import { debounceTime, filter, map, startWith, switchMap } from 'rxjs';
+import { BehaviorSubject, debounceTime, filter, map, ReplaySubject, startWith, switchMap } from 'rxjs';
+import { ProductFilterEvent } from '../../components/product-filter/product-filter.component';
 
 @Component({
   selector: 'app-products',
@@ -12,29 +13,19 @@ import { debounceTime, filter, map, startWith, switchMap } from 'rxjs';
 })
 export class ProductsComponent {
   protected productSrv = inject(ProductService);
-  protected fb = inject(FormBuilder);
 
-  filters = this.fb.group({
-    name: '',
-    minPrice: [null, {updateOn: 'submit', validators: [Validators.min(0)]}],
-    maxPrice: [null, {updateOn: 'submit', validators: [Validators.min(0)]}]
-  });
+  protected _filters$ = new BehaviorSubject<ProductFilter>({});
+  filters$ = this._filters$.asObservable();
 
-  products$ = this.filters.valueChanges
+  products$ = this.filters$
               .pipe(
-                filter(_ => this.filters.valid),
                 debounceTime(300),
-                startWith({}),
                 switchMap(filters => {
                   return this.productSrv.list(filters);
                 })
               );
 
   ngOnInit() {
-    this.filters.valueChanges.subscribe(f => {
-      console.log(this.filters.invalid);
-      console.log(f);
-    });
   }
 
   addToCart(productId: string, quantity: number) {
@@ -43,5 +34,9 @@ export class ProductsComponent {
 
   trackById(_: any, item: Product) {
     return item.id;
+  }
+
+  setFilters(filters: ProductFilter) {
+    this._filters$.next(filters);
   }
 }
