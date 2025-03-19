@@ -1,1 +1,15 @@
-{{ (product$ | async)?.name}}
+<div *ngIf="product$ | async as product">
+  {{ product.name}}
+  <br>
+  {{ price$ | async | currency }} {{ discount$ | async | discountAmount}}
+  <input
+    type="number"
+    class="form-control"
+    [formControl]="quantityInput"
+    [class.is-invalid]="quantityInput.invalid">
+  <button
+    type="button"
+    class="btn btn-primary"
+    [disabled]="quantityInput.invalid"
+    (click)="add(product)">Add</button>
+</div>

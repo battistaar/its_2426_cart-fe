@@ -1,7 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, switchMap } from 'rxjs';
+import { map, switchMap, combineLatest } from 'rxjs';
 import { ProductService } from '../../services/product.service';
+import { VatService } from '../../services/vat.service';
+import { calcCartItem } from '../../utils/cart-utils';
+import { FormControl, Validators } from '@angular/forms';
+import { CartSourceService } from '../../services/cart-source.service';
+import { Product } from '../../services/product.entity';
 
 @Component({
   selector: 'app-product-detail',
@@ -12,6 +17,10 @@ import { ProductService } from '../../services/product.service';
 export class ProductDetailComponent {
   protected activatedRoute = inject(ActivatedRoute);
   protected productSrv = inject(ProductService);
+  protected vatSrv = inject(VatService);
+  protected cartSrv = inject(CartSourceService);
+
+  quantityInput = new FormControl(1, {nonNullable: true, validators: [Validators.required, Validators.min(1)]});
 
   product$ = this.activatedRoute.paramMap
               .pipe(
@@ -19,13 +28,22 @@ export class ProductDetailComponent {
                 switchMap(id => this.productSrv.getById(id!))
               );
 
-  ngOnInit() {
-    // this.activatedRoute.paramMap
-    //   .pipe(
-    //     map(params => params.get('id'))
-    //   )
-    //   .subscribe(id => {
-    //     console.log(id);
-    //   });
+  protected cartItem$ = combineLatest([
+                          this.product$,
+                          this.vatSrv.vat$
+                        ]).pipe(
+                          map(([product, vat]) => {
+                            return calcCartItem({product, id:'', quantity: 1}, vat);
+                          })
+                        );
+
+  price$ = this.cartItem$.pipe(map(item => item.totalPrice));
+
+  discount$ = this.cartItem$.pipe(map(item => item.discountAmount));
+
+  add(product: Product) {
+    if (this.quantityInput.valid) {
+      this.cartSrv.addToCart(product.id, this.quantityInput.value);
+    }
   }
 }
