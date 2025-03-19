@@ -23,7 +23,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   // protected subscription: Subscription | null = null;
 
   ngOnInit() {
-    this.vatSrv.setCountry('IT');
 
     this.updateQtySubject$
       .pipe(

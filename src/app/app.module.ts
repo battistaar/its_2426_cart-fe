@@ -17,6 +17,9 @@ import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { ProductsComponent } from './pages/products/products.component';
 import { ProductCardComponent } from './components/product-card/product-card.component';
 import { ProductFilterComponent } from './components/product-filter/product-filter.component';
+import { SideCartComponent } from './components/side-cart/side-cart.component';
+import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
+import { ProductContainerComponent } from './pages/product-container/product-container.component';
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -28,7 +31,10 @@ registerLocaleData(localeIt);
     CheckoutComponent,
     ProductsComponent,
     ProductCardComponent,
-    ProductFilterComponent
+    ProductFilterComponent,
+    SideCartComponent,
+    ProductDetailComponent,
+    ProductContainerComponent
   ],
   imports: [
     BrowserModule,

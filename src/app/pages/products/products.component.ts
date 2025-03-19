@@ -4,6 +4,7 @@ import { ProductFilter, ProductService } from '../../services/product.service';
 import { BehaviorSubject, catchError, debounceTime, map, Observable, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { omitBy, pick } from 'lodash';
+import { CartSourceService } from '../../services/cart-source.service';
 
 @Component({
   selector: 'app-products',
@@ -15,6 +16,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   protected productSrv = inject(ProductService);
   protected activatedRoute = inject(ActivatedRoute);
   protected router = inject(Router);
+  protected cartSrv = inject(CartSourceService);
 
   filters$: Observable<ProductFilter> = this.activatedRoute.data
                                           .pipe(
@@ -56,7 +58,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   addToCart(productId: string, quantity: number) {
-    //console.log(productId, quantity);
+    this.cartSrv.addToCart(productId, quantity);
   }
 
   trackById(_: any, item: Product) {
@@ -65,5 +67,9 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   setFilters(filters: ProductFilter) {
     this.updateQueryParams$.next(filters);
+  }
+
+  goToDetails(id: string) {
+    this.router.navigate(['/products', id]);
   }
 }

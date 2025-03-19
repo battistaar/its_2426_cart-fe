@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { ProductsComponent } from './pages/products/products.component';
 import { productFiltersResolver } from './resolvers/product-filters.resolver';
+import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
+import { ProductContainerComponent } from './pages/product-container/product-container.component';
 
 const routes: Routes = [
   {
@@ -11,11 +13,21 @@ const routes: Routes = [
   },
   {
     path: 'products',
-    component: ProductsComponent,
-    resolve: {
-      filters: productFiltersResolver
-    },
-    runGuardsAndResolvers: 'paramsOrQueryParamsChange'
+    component: ProductContainerComponent,
+    children: [
+      {
+        path: '',
+        component: ProductsComponent,
+        resolve: {
+          filters: productFiltersResolver
+        },
+        runGuardsAndResolvers: 'paramsOrQueryParamsChange'
+      },
+      {
+        path: ':id',
+        component: ProductDetailComponent
+      }
+    ]
   },
   {
     path: '',

@@ -31,4 +31,37 @@ export class CartSourceService {
     this.http.get<CartItem[]>('/api/cart')
       .subscribe(items => this._items$.next(items));
   }
+
+  addToCart(productId: string, quantity: number) {
+    this.http.post<CartItem>('/api/cart', { productId, quantity})
+      .subscribe(newItem => {
+        const list = this._items$.value;
+        const clone = structuredClone(list);
+        const index = list.findIndex(el => el.id === newItem.id);
+
+        if (index === -1) {
+          clone.push(newItem);
+        } else {
+          clone[index] = newItem;
+        }
+
+        this._items$.next(clone);
+      });
+  }
+
+  removeFromCart(id: string) {
+    this.http.delete<CartItem>(`/api/cart/${id}`)
+      .subscribe(_ => {
+        const list = this._items$.value;
+        const clone = structuredClone(list);
+        const index = list.findIndex(el => el.id === id);
+
+        if (index === -1) {
+          return;
+        }
+
+        clone.splice(index, 1);
+        this._items$.next(clone);
+      });
+  }
 }

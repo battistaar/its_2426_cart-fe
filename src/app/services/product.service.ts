@@ -19,4 +19,8 @@ export class ProductService {
     const q: any = omitBy(filters, isNil);
     return this.http.get<Product[]>('/api/products', { params: q});
   }
+
+  getById(id: string) {
+    return this.http.get<Product>(`/api/products/${id}`);
+  }
 }
