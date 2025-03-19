@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, switchMap, combineLatest } from 'rxjs';
+import { map, switchMap, combineLatest, Observable } from 'rxjs';
 import { ProductService } from '../../services/product.service';
 import { VatService } from '../../services/vat.service';
 import { calcCartItem } from '../../utils/cart-utils';
@@ -22,10 +22,9 @@ export class ProductDetailComponent {
 
   quantityInput = new FormControl(1, {nonNullable: true, validators: [Validators.required, Validators.min(1)]});
 
-  product$ = this.activatedRoute.paramMap
+  product$: Observable<Product> = this.activatedRoute.data
               .pipe(
-                map(params => params.get('id')),
-                switchMap(id => this.productSrv.getById(id!))
+                map(data => data['product'])
               );
 
   protected cartItem$ = combineLatest([

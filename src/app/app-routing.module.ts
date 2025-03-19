@@ -5,6 +5,7 @@ import { ProductsComponent } from './pages/products/products.component';
 import { productFiltersResolver } from './resolvers/product-filters.resolver';
 import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
 import { ProductContainerComponent } from './pages/product-container/product-container.component';
+import { productDetailResolver } from './resolvers/product-detail.resolver';
 
 const routes: Routes = [
   {
@@ -25,7 +26,10 @@ const routes: Routes = [
       },
       {
         path: ':id',
-        component: ProductDetailComponent
+        component: ProductDetailComponent,
+        resolve: {
+          product: productDetailResolver
+        }
       }
     ]
   },
