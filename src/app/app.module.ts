@@ -12,7 +12,7 @@ import localeIt from '@angular/common/locales/it';
 import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import { DiscountAmountPipe } from './pipes/discount-amount.pipe';
 import { CartSourceService } from './services/cart-source.service';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { ProductsComponent } from './pages/products/products.component';
 import { ProductCardComponent } from './components/product-card/product-card.component';
@@ -20,6 +20,8 @@ import { ProductFilterComponent } from './components/product-filter/product-filt
 import { SideCartComponent } from './components/side-cart/side-cart.component';
 import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
 import { ProductContainerComponent } from './pages/product-container/product-container.component';
+import { LoginComponent } from './pages/login/login.component';
+import { authInterceptor } from './utils/auth.interceptor';
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -34,7 +36,8 @@ registerLocaleData(localeIt);
     ProductFilterComponent,
     SideCartComponent,
     ProductDetailComponent,
-    ProductContainerComponent
+    ProductContainerComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +51,9 @@ registerLocaleData(localeIt);
     { provide: LOCALE_ID, useValue: 'it-IT' },
     CurrencyPipe,
     CartSourceService,
-    provideHttpClient()
+    provideHttpClient(
+      withInterceptors([authInterceptor])
+    )
   ],
   bootstrap: [AppComponent]
 })
