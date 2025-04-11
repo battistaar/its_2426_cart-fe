@@ -13,7 +13,7 @@ export class AuthService {
   protected jwtSrv = inject(JwtService);
   protected router = inject(Router);
 
-  protected _currentUser$ = new ReplaySubject<User | null>();
+  protected _currentUser$ = new ReplaySubject<User | null>(1);
   currentUser$ = this._currentUser$.asObservable();
 
   isAuthenticated$ = this.currentUser$
