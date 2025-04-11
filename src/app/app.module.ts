@@ -22,6 +22,8 @@ import { ProductDetailComponent } from './pages/product-detail/product-detail.co
 import { ProductContainerComponent } from './pages/product-container/product-container.component';
 import { LoginComponent } from './pages/login/login.component';
 import { authInterceptor } from './utils/auth.interceptor';
+import { logoutInterceptor } from './utils/logout.interceptor';
+import { IfAuthenticatedDirective } from './utils/if-authenticated.directive';
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -37,7 +39,8 @@ registerLocaleData(localeIt);
     SideCartComponent,
     ProductDetailComponent,
     ProductContainerComponent,
-    LoginComponent
+    LoginComponent,
+    IfAuthenticatedDirective
   ],
   imports: [
     BrowserModule,
@@ -52,7 +55,7 @@ registerLocaleData(localeIt);
     CurrencyPipe,
     CartSourceService,
     provideHttpClient(
-      withInterceptors([authInterceptor])
+      withInterceptors([authInterceptor, logoutInterceptor])
     )
   ],
   bootstrap: [AppComponent]

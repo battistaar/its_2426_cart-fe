@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, map, tap } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map, tap } from 'rxjs';
 import { JwtService } from './jwt.service';
 import { User } from '../entities/user.entity';
 import { Router } from '@angular/router';
@@ -16,6 +16,12 @@ export class AuthService {
   protected _currentUser$ = new BehaviorSubject<User | null>(null);
   currentUser$ = this._currentUser$.asObservable();
 
+  isAuthenticated$ = this.currentUser$
+                      .pipe(
+                        map(user => !!user),
+                        distinctUntilChanged()
+                      );
+
   login(username: string, password: string) {
     return this.http.post<any>('/api/login', {username, password})
       .pipe(
@@ -28,7 +34,10 @@ export class AuthService {
   logout() {
     this.jwtSrv.removeToken();
     this._currentUser$.next(null);
-    this.router.navigate(['/']);
+  }
+
+  isLoggedIn() {
+    return this.jwtSrv.hasToken();
   }
 
 }

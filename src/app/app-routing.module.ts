@@ -7,6 +7,7 @@ import { ProductDetailComponent } from './pages/product-detail/product-detail.co
 import { ProductContainerComponent } from './pages/product-container/product-container.component';
 import { productDetailResolver } from './resolvers/product-detail.resolver';
 import { LoginComponent } from './pages/login/login.component';
+import { authGuard } from './utils/auth.guard';
 
 const routes: Routes = [
   {
@@ -15,7 +16,8 @@ const routes: Routes = [
   },
   {
     path: 'checkout',
-    component: CheckoutComponent
+    component: CheckoutComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'products',
