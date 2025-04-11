@@ -2,16 +2,26 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import { CartItem } from './cart-item.entity';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class CartSourceService {
   protected http = inject(HttpClient);
+  protected authSrv = inject(AuthService);
+
   protected _items$ = new BehaviorSubject<CartItem[]>([]);
 
   items$ = this._items$.asObservable();
 
   constructor() {
-    this.fetch();
+    this.authSrv.isAuthenticated$
+      .subscribe(isLoggedIn => {
+        if (isLoggedIn) {
+          this.fetch()
+        } else {
+          this._items$.next([]);
+        }
+      });
   }
 
   setQuantity(id: string, quantity: number) {
