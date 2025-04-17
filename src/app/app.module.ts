@@ -59,7 +59,7 @@ registerLocaleData(localeIt);
     CurrencyPipe,
     CartSourceService,
     provideHttpClient(
-      withInterceptors([authInterceptor])
+      withInterceptors([authInterceptor, logoutInterceptor])
     )
   ],
   bootstrap: [AppComponent]

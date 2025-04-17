@@ -4,11 +4,11 @@ import { HttpHandlerFn, HttpRequest } from "@angular/common/http";
 
 export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn) {
   // Inject the current `JwtService` and use it to get an authentication token:
-  const authToken = inject(JwtService).getToken();
+  const authTokens = inject(JwtService).getToken();
   // Clone the request to add the authentication header.
-  if (authToken) {
+  if (authTokens) {
     const newReq = req.clone({
-      headers: req.headers.append('Authorization', `Bearer ${authToken}`),
+      headers: req.headers.set('Authorization', `Bearer ${authTokens.token}`),
     });
     return next(newReq);
   } else {
