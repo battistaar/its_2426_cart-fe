@@ -22,6 +22,9 @@ export class ProductCardComponent implements OnChanges {
   @Input()
   vat: number = 0;
 
+  @Input()
+  disabled: boolean = false;
+
   @Output()
   add = new EventEmitter<ProductCardAddEvent>();
 

@@ -6,7 +6,13 @@
     <a (click)="onDetails()" class="btn btn-link">details</a>
   </div>
   <div class="card-footer text-muted text-end">
-    <input type="number" [(ngModel)]="quantity" class="product-card-quantity">
-    <button class="btn btn-link" (click)="onAdd()">Add</button>
+    <input type="number"
+      [disabled]="disabled"
+      [(ngModel)]="quantity"
+      class="product-card-quantity">
+    <button
+      [disabled]="disabled"
+      class="btn btn-link"
+      (click)="onAdd()">Add</button>
   </div>
 </div>

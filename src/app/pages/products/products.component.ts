@@ -5,6 +5,7 @@ import { BehaviorSubject, catchError, debounceTime, map, Observable, startWith, 
 import { ActivatedRoute, Router } from '@angular/router';
 import { omitBy, pick } from 'lodash';
 import { CartSourceService } from '../../services/cart-source.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-products',
@@ -17,6 +18,9 @@ export class ProductsComponent implements OnInit, OnDestroy {
   protected activatedRoute = inject(ActivatedRoute);
   protected router = inject(Router);
   protected cartSrv = inject(CartSourceService);
+  protected authSrv = inject(AuthService);
+
+  isAuthenticated$ = this.authSrv.isAuthenticated$;
 
   filters$: Observable<ProductFilter> = this.activatedRoute.data
                                           .pipe(

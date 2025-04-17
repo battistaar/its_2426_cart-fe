@@ -24,6 +24,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { authInterceptor } from './utils/auth.interceptor';
 import { logoutInterceptor } from './utils/logout.interceptor';
 import { IfAuthenticatedDirective } from './utils/if-authenticated.directive';
+import { NavUserComponent } from './components/nav-user/nav-user.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -40,7 +42,9 @@ registerLocaleData(localeIt);
     ProductDetailComponent,
     ProductContainerComponent,
     LoginComponent,
-    IfAuthenticatedDirective
+    IfAuthenticatedDirective,
+    NavUserComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

@@ -20,8 +20,9 @@
           <button
             type="button"
             class="btn btn-primary"
-            [disabled]="quantityInput.invalid"
-            (click)="add(product)">Add</button>
+            [disabled]="quantityInput.disabled || quantityInput.invalid"
+            (click)="add(product)"
+            >Add</button>
           <div class="invalid-feedback">
             Min 0
           </div>
